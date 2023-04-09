@@ -13,11 +13,37 @@ class Appointments extends Component {
     appointmentList: [],
   }
 
+  onGettingStarList = () => {
+    this.setState(prevState => ({
+      appointmentList: prevState.appointmentList.filter(eachList => {
+        if (eachList.isStar === true) {
+          return eachList
+        }
+        return eachList
+      }),
+    }))
+  }
+
+  onStarring = id => {
+    this.setState(prevState => ({
+      appointmentList: prevState.appointmentList.map(eachList => {
+        if (id === eachList.id) {
+          return {...eachList, isStar: !eachList.isStar}
+        }
+        return eachList
+      }),
+    }))
+  }
+
   renderTheList = () => {
     const {appointmentList} = this.state
 
     return appointmentList.map(eachList => (
-      <AppointmentItem eachList={this.eachList} key={eachList.id} />
+      <AppointmentItem
+        eachList={eachList}
+        key={eachList.id}
+        onStarring={this.onStarring}
+      />
     ))
   }
 
@@ -27,8 +53,9 @@ class Appointments extends Component {
 
     const newAppointment = {
       id: v4(),
-      text: textInput,
-      date: dateInput,
+      textInput,
+      dateInput,
+      isStar: true,
     }
 
     this.setState(prevState => ({
@@ -94,11 +121,15 @@ class Appointments extends Component {
           <hr className="line" />
           <div className="bottom-container">
             <h1 className="appointment-text">Appointments</h1>
-            <button className="star-button" type="button">
+            <button
+              className="star-button"
+              type="button"
+              onClick={this.onGettingStarList}
+            >
               Starred
             </button>
-            <ul>{this.renderTheList()}</ul>
           </div>
+          <ul className="list">{this.renderTheList()}</ul>
         </div>
       </div>
     )
